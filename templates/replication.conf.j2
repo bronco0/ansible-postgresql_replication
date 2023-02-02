@@ -2,7 +2,11 @@
 
 wal_level = replica
 max_wal_senders = {{ postgresql_replication__walsenders }} # max number of walsender processes
+{% if postgresql__version < 14 %}
 wal_keep_segments = {{ postgresql_replication__walsegments }} # in logfile segments, 16MB each; 0 disables
+{% else %}
+wal_keep_size = {{ postgresql_replication__walsegments }} # in logfile segments, 16MB each; 0 disables
+{% endif %}
 
 archive_mode = on
 {% for host in postgresql_replication__other_nodes %}
